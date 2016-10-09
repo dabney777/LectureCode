@@ -127,16 +127,15 @@ struct T3dhull
 }hull;
 int main()
 {
-	ifstream in("C:\\Users\\Dabney\\Desktop\\3DdataSet.txt");
-	in >> hull.n;
-	//scanf_s("%d", &hull.n);
+	
+	cout << "please input point num"<<endl;
+	scanf_s("%d", &hull.n);
 	
 		int i;
+		cout << "please input point's x,y,z:0;" << endl;
 		for (i = 0; i < hull.n; i++)
-			//scanf_s("%lf,%lf,%lf", &hull.ply[i].x, &hull.ply[i].y, &hull.ply[i].z);
-		{
-			in >> hull.ply[i].x >> hull.ply[i].y >> hull.ply[i].z;
-		}
+			scanf_s("%lf,%lf,%lf", &hull.ply[i].x, &hull.ply[i].y, &hull.ply[i].z);
+	
 		hull.construct();
 		cout << "The triangle in convexHull are:" << endl;
 		for (i = 0; i < hull.trianglecnt; i++)cout << "(" << hull.tri[i].a << "," << hull.tri[i].b << "," << hull.tri[i].c << ")"<<endl;
