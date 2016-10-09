@@ -7,33 +7,33 @@
 #include<fstream>
 using namespace std;
 #define PR 1e-8
-#define N 11000
-struct TPoint
+#define N 25000
+struct HullPoint
 {
 	double x, y, z;
-	TPoint() {}
-	TPoint(double _x, double _y, double _z) :x(_x), y(_y), z(_z) {}
-	TPoint operator-(const TPoint p) { return TPoint(x - p.x, y - p.y, z - p.z); }
-	TPoint operator*(const TPoint p) { return TPoint(y*p.z - z*p.y, z*p.x - x*p.z, x*p.y - y*p.x); }//vector product
-	double operator^(const TPoint p) { return x*p.x + y*p.y + z*p.z; }//dot product
+	HullPoint() {}
+	HullPoint(double _x, double _y, double _z) :x(_x), y(_y), z(_z) {}
+	HullPoint operator-(const HullPoint p) { return HullPoint(x - p.x, y - p.y, z - p.z); }
+	HullPoint operator*(const HullPoint p) { return HullPoint(y*p.z - z*p.y, z*p.x - x*p.z, x*p.y - y*p.x); }//vector product
+	double operator^(const HullPoint p) { return x*p.x + y*p.y + z*p.z; }//dot product
 };
 struct fac
 {
 	int a, b, c;// num of 3 point in the same plain in convexhull
 	bool ok;//is the plain is the final plain in convexhull
 };
-struct T3dhull
+typedef struct T3dhull
 {
-	int n;//初始点数
-	TPoint ply[N];//初始点
+	int n=-1;//初始点数
+	HullPoint ply[N];//初始点
 	int trianglecnt;//凸包上三角形数
 	fac tri[N];//凸包三角形
 	int vis[N][N];//点i到点j是属于哪个面
-	double dist(TPoint a) { return sqrt(a.x*a.x + a.y*a.y + a.z*a.z); }//两点长度
-	double volume(TPoint a, TPoint b, TPoint c, TPoint d) { return (b - a)*(c - a) ^ (d - a); }//四面体有向体积*6
-	double ptoplane(TPoint &p, fac &f)//正：点在面同向
+	double dist(HullPoint a) { return sqrt(a.x*a.x + a.y*a.y + a.z*a.z); }//两点长度
+	double volume(HullPoint a, HullPoint b, HullPoint c, HullPoint d) { return (b - a)*(c - a) ^ (d - a); }//四面体有向体积*6
+	double ptoplane(HullPoint &p, fac &f)//正：点在面同向
 	{
-		TPoint m = ply[f.b] - ply[f.a], n = ply[f.c] - ply[f.a], t = p - ply[f.a];
+		HullPoint m = ply[f.b] - ply[f.a], n = ply[f.c] - ply[f.a], t = p - ply[f.a];
 		return (m*n) ^ t;
 	}
 	void deal(int p, int a, int b)
@@ -60,7 +60,7 @@ struct T3dhull
 	}
 	bool same(int s, int e)//判断两个面是否为同一面
 	{
-		TPoint a = ply[tri[s].a], b = ply[tri[s].b], c = ply[tri[s].c];
+		HullPoint a = ply[tri[s].a], b = ply[tri[s].b], c = ply[tri[s].c];
 		return fabs(volume(a, b, c, ply[tri[e].a]))<PR
 			&&fabs(volume(a, b, c, ply[tri[e].b]))<PR
 			&&fabs(volume(a, b, c, ply[tri[e].c]))<PR;
@@ -80,15 +80,6 @@ struct T3dhull
 		}
 		if (tmp) return;
 		tmp = true;
-		for (i = 2; i<n; i++)//前三点不共线
-		{
-			if ((dist((ply[0] - ply[1])*(ply[1] - ply[i])))>PR)
-			{
-				swap(ply[2], ply[i]); tmp = false; break;
-			}
-		}
-		if (tmp) return;
-		tmp = true;
 		for (i = 3; i<n; i++)//前四点不共面
 		{
 			if (fabs((ply[0] - ply[1])*(ply[1] - ply[2]) ^ (ply[0] - ply[i]))>PR)
@@ -97,6 +88,16 @@ struct T3dhull
 			}
 		}
 		if (tmp) return;
+		tmp = true;
+		for (i = 2; i<n; i++)//前三点不共线
+		{
+			if ((dist((ply[0] - ply[1])*(ply[1] - ply[i])))>PR)
+			{
+				swap(ply[2], ply[i]); tmp = false; break;
+			}
+		}
+		if (tmp) return;
+		
 		fac add;
 		for (i = 0; i<4; i++)//构建初始四面体
 		{
@@ -124,7 +125,8 @@ struct T3dhull
 		}
 	}
 
-}hull;
+}ConvexHull;
+ConvexHull hull;
 int main()
 {
 	
