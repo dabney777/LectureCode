@@ -6,7 +6,7 @@
 #include<iostream>
 #include<fstream>
 using namespace std;
-#define PR 1e-8
+#define PR 1e-7
 #define N 25000
 struct HullPoint
 {
@@ -126,11 +126,12 @@ typedef struct T3dhull
 	}
 
 }ConvexHull;
-ConvexHull hull;
+
 int main()
 {
 	
 	cout << "please input point num"<<endl;
+	ConvexHull hull;
 	scanf_s("%d", &hull.n);
 	
 		int i;
