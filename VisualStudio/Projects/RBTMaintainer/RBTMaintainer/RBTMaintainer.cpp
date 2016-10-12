@@ -4,238 +4,203 @@
 #include "stdafx.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #define N 10000
-
+#define BLACK 1
+#define RED 0
 using namespace std;
-
-
-struct RBTNode;
-RBTNode *CreatRBTNode(int _key, bool _isNil, int _color);
-RBTNode *CreatNilNode();
-RBTNode *Nil= CreatNilNode();
-
-typedef struct RBTNode{
-	int color = 1;		//0 is Black and 1 is Red!
-	RBTNode *parent=NULL, *lchild= NULL, *rchild = NULL;
-	int key = 0;
-	bool isNil = false;
-}RBTNode;
-RBTNode *CreatNilNode() {
-	RBTNode *newNode = (RBTNode*)malloc(sizeof(RBTNode));
-	newNode->color = 0;
-	newNode->isNil = true;
-	newNode->key = 0;
-	newNode->lchild = newNode->rchild = newNode->parent = NULL;
-	return newNode;
-}
-RBTNode *CreatRBTNode(int _key, bool _isNil = false,int _color=1) {
-	RBTNode *newNode = (RBTNode*)malloc(sizeof(RBTNode));
-	newNode->key = _key;
-	newNode->isNil = _isNil;
-	newNode->lchild = CreatNilNode();
-	newNode->rchild = CreatNilNode();
-	newNode->lchild->parent = newNode->rchild->parent = newNode;
-	newNode->color = _color;
-	newNode->parent = NULL;
-	return newNode;
-}
-
-RBTNode *RBTSearch(RBTNode *tree, RBTNode *last, int key) {		//Which Node the new Node will insert
-	if (tree == NULL) return NULL;
-	if (tree->isNil == true) return last;
-	if (key > tree->key) return RBTSearch(tree->rchild, tree, key);
-	else return RBTSearch(tree->lchild, tree, key);
-}
-
-void LeftRotation(RBTNode *node) {
-	RBTNode *parent=node->parent, *left=node->lchild, *right=node->rchild;
-	if (node->parent != NULL) {
-		if (node == parent->lchild) {
-			parent->lchild = right;
-		}else {
-			parent->rchild = right;
+class RBT {
+private:
+	struct RBTNode {
+		RBTNode *left, *right, *parent;
+		bool color;
+		int key;
+		RBTNode() {
+			left = right = parent = NULL;
+			color = RED;
+			key = 0;
 		}
-	}
-	else	{		right->parent = node->parent;	}
-	node->parent = right;
-	node->rchild = right->lchild;
-	right->parent = parent;
-	right->lchild->parent = node;
-	right->lchild = node;
-
-}
-
-void RightRotation(RBTNode *node) {
-	RBTNode *parent = node->parent, *left = node->lchild, *right = node->rchild;
-	if (node->parent != NULL) {
-		if (node == parent->lchild) {
-			parent->lchild = left;
-		}
-		else {
-			parent->rchild = left;
-		}
-	}
-	else { left->parent = node->parent; }
-	node->parent = left;
-	node->lchild = left->rchild;
-	left->parent = parent;
-	left->rchild->parent = node;
-	left->rchild = node;
-
-	
-}
-
-void flipNodeColor(RBTNode *node) {
-	if (node->lchild->color == node->rchild->color&&node->lchild->color == 1) {
-		if (node->parent != NULL) {
-			node->color = 1;
-		}
-		node->lchild->color = node->rchild->color = 0;
-	}
-}
-void insertToBLACKParent(RBTNode *node, RBTNode *insertP) {
-	if (insertP->color != 0)cout << "insertToBLACKParent have a wrong." << endl;
-	if (node->key < insertP->key) { insertP->lchild = node; node->parent = insertP; }
-	if (node->key >= insertP->key) { insertP->rchild = node; node->parent = insertP; }
-	flipNodeColor(insertP);
-}
-
-void insertToREDParent(RBTNode *node, RBTNode *insertP,RBTNode *uncle) {
-	if (uncle == NULL) {
-		if (node->key > insertP->key) {
-			insertP->rchild = node;
-			node->parent = insertP;
-		}
-		else {
-			insertP->lchild = node;
-			node->parent = insertP;
-		}
-	}else
-	if (uncle->color == 1) {//insertP is grantpa's lchild
-		if (insertP == insertP->parent->lchild) {
-			if (node->key < insertP->key) { //node is insertP's lchild 
-				insertP->parent->color = 1;
-				insertP->color = 0;
-				insertP->lchild = node;
-				node->parent = insertP;
-				RightRotation(insertP->parent);
+		RBTNode *grandparent() {
+			if (parent != NULL) {
+				return parent->parent;
 			}
-			else {				//node is insertP's rchild
-				insertP->rchild = node;
-				node->parent = insertP;
-				LeftRotation(insertP);//insertP is the new insert node
-				insertP->parent->lchild = Nil;
-				insertToREDParent(insertP, node, uncle);
-			}
-		}else {
-			if (insertP == insertP->parent->rchild) { //node is insertP's rchild 
-				insertP->parent->color = 1;
-				insertP->color = 0;
-				insertP->rchild = node;
-				node->parent = insertP;
-				RightRotation(insertP);
-			}
-			else {						//node is insertP's lchild
-				insertP->lchild = node;
-				node->parent = insertP;
-				RightRotation(insertP);//insertP is the new insert node
-				insertP->parent->rchild = Nil;
-				insertToREDParent(insertP, node, uncle);
-			}
+			return NULL;
 		}
+		RBTNode *uncle() {
+			if (parent->right == this) return parent->left;
+			return parent->right;
+		}
+	};
+	RBTNode *root=NULL, *NIL=new RBTNode();
+	void rightRotate(RBTNode *node) {
+		RBTNode *gp = node->grandparent();
+		RBTNode *pa = node->parent;
+		RBTNode *uncle = node->uncle();
+		if (gp != NULL) {
+			if (gp->left == pa) gp->left = node;
+			else gp->right = node;
+		}else { root = node; }
+		node->parent = gp;//把新节点给接上
 		
-	}
-	else {
-		if (insertP == insertP->parent->rchild) {
-			if (node->key > insertP->key) {
-				insertP->rchild = node;
-				node->parent = insertP;
-				insertP->color = 0;
-				insertP->parent->color = 1;
-				LeftRotation(insertP->parent);
-			}
-			else {
-				insertP->lchild = node;
-				node->parent = insertP;
-				RightRotation(insertP);
-				node->rchild = Nil;
-				insertToREDParent(insertP, node, uncle);
-			}
-		}
-		else {
-			if (node->key < insertP->key) {
-				node->parent = insertP;
-				insertP->lchild = node;
-				insertP->color = 1;
-				node->color = 0;
-				RightRotation(insertP->parent);
-			}
-			else {
-				node->parent = insertP;
-				insertP->rchild = node;
-				LeftRotation(insertP);
-				node->lchild = CreatNilNode();
-				node->lchild->parent = node;
-				insertToREDParent(insertP, node, uncle);
-			}
-		}
+		pa->parent = node;
+		pa->left = node->right;
+		if (node->right != NIL) { node->right->parent = pa; }
+		node->right = pa;
 	}
 
-	return;
-}
-RBTNode *RBTInsert(int key, RBTNode *root) {
-	if (root == NULL) {
-		root = CreatRBTNode(key); root->color = 0;
+	void leftRotate(RBTNode *node) {
+		RBTNode *gp = node->grandparent();
+		RBTNode *pa = node->parent;
+		RBTNode *uncle = node->uncle();
+		
+
+		if (gp != NULL) {
+			if (gp->left == pa) gp->left = node;
+			else gp->right = node;
+		}
+		else { root = node; }
+		node->parent = gp;//把新节点接入到插入节点中
+		
+		pa->parent = node;
+		pa->right = node->left;
+		if (node->left != NIL) { node->left->parent = pa; }
+		node->left = pa;
 	}
-	else {
-		RBTNode *insertPosition = RBTSearch(root,NULL, key), *uncle = NULL, *parent = insertPosition->parent;
-		RBTNode *node = CreatRBTNode(key);
-		if (insertPosition->color == 0) { insertToBLACKParent(node, insertPosition); }
+
+	void flipcolor(RBTNode *node) {
+		if (node==NULL)
+		{
+			return;
+
+		}
+		if (node->left != NIL&&node->right != NIL&&node->left->color == RED&&node->right->color == RED)
+		{
+			node->left->color = BLACK;
+			node->right->color = BLACK;
+			if (node != root) {
+				node->color = RED;
+				flipcolor(node->parent);
+			}
+		}
+
+	}
+	string outPutColor(RBTNode *node) {
+		return node->color ? "BLACK" : "RED";
+	}
+	RBTNode *creatNewNode(int data){
+		RBTNode *node = new RBTNode();
+		node->left = node->right = NIL;
+		node->key = data;
+		return node;
+	}
+	void insertToBLACKPoint(RBTNode *insertP,RBTNode *node){
+		if (node->key > insertP->key) { 
+			insertP->right = node; 
+			node->parent = insertP;
+		}
+		else { 
+		insertP->left = node; 
+		node->parent = insertP;
+		}
+	}
+	void insertToREDPoint(RBTNode *insertP, RBTNode *node) {
+		flipcolor(insertP->parent);
+		if (insertP->color == BLACK) { insertToBLACKPoint(insertP, node); }
 		else {
-			if (parent->parent != NULL) {
-				if (parent->lchild == insertPosition) {
-					uncle = parent->rchild;
+			if(insertP==insertP->parent->left){
+				if (node->key > insertP->key) {//II:insert to BRB's right
+					node->parent = insertP;
+					insertP->right = node;
+					leftRotate(node);
+					node->left = NIL;
+					insertP->left = insertP->right = NIL;
+					insertToREDPoint(node, insertP);
+				}
+				else {//I:insert to BRB's left
+					node->parent = insertP;
+					insertP->left = node;
+					insertP->color = BLACK;
+					node->grandparent()->color = RED;
+					rightRotate(insertP);
+					
+				}
+			}else{
+				if (insertP == insertP->parent->left) {//IV:insert to BBR's left
+					insertP->left = node;
+					node->parent = insertP;
+					rightRotate(node);
+					node->right = NIL;
+					insertP->left = insertP->right = NIL;
+					insertToREDPoint(node, insertP);
 				}
 				else {
-					uncle = parent->lchild;
+					insertP->right = node;
+					node->parent = insertP;
+					insertP->color = BLACK;
+					node->grandparent()->color = RED;
+					leftRotate(insertP);
+
+					//III:insert to BBR's right
 				}
-				insertToREDParent(node, insertPosition, uncle);
 			}
-			insertToREDParent(node, insertPosition, NULL);
+			
 		}
 	}
-	return root;
-}
-
-void RBTDelete(RBTNode &node) {
-
-}
-
-
-
-
-void printRBT(RBTNode *root) {
-	if (root->isNil == true) return;
-	printRBT(root->lchild);
-	cout<<root->key<<"|"<<endl;
-	printRBT(root->rchild);
-
-}
-
-
-int main()
-{
-	int a,n;
-	ifstream in("C:\\Users\\Dabney\\Desktop\\DATA.txt");
-	in >> n>>a;
-	RBTNode *root = RBTInsert(a,NULL);
-	for (int i = 0; i < n-1; i++) {
-		in >> a;
-		RBTInsert(a, root);
+	void insertRBT(RBTNode *insertP, RBTNode *node) { 
+		
+		if (node->key > insertP->key) {
+			if (insertP->right != NIL) { insertRBT(insertP->right, node); }
+			else{
+				if (insertP->color == BLACK) { insertToBLACKPoint(insertP, node); }
+				if (insertP->color == RED) { insertToREDPoint(insertP, node); }
+				return;
+				//insert here
+			}
+		}
+		else {
+			if (insertP->left != NIL){insertRBT(insertP->left,node);	}
+			else {
+				if (insertP->color == BLACK) { insertToBLACKPoint(insertP, node); }
+				if (insertP->color == RED) { insertToREDPoint(insertP, node); }
+				return;
+				//insert here
+			}
+		}
 	}
-	printRBT(root);
-	system("PAUSE");
-    return 0;
-}
+public:
+	void insert(int x) {
+		NIL->color = BLACK;
+		RBTNode * newnode = creatNewNode(x);
+		if (root == NULL) { root = newnode; root->color = BLACK; root->left = root->right = NIL; }
+		else {
+			insertRBT(root, newnode);
+		}
+	}
+	void print(RBTNode *node) {
+		if (node == NULL) { cout << "I am an empty tree" << endl; }
+		else {
+			if (node->left != NIL)	print(node->left);
+			cout << node->key << outPutColor(node) << endl;
+			if (node->right != NIL)	print(node->right);
+		}
+	}
+	void realPrint() { print(root); }
+};
 
+
+int main() {
+	ifstream in("C:\\Users\\Dabney\\Desktop\\DATA.txt");
+	int n,c;
+	in >> n;
+	RBT rbt;
+	for (int i = 0; i < n; i++) {
+		in >> c;
+		rbt.insert(c);
+			
+	}
+	
+	rbt.realPrint();
+	system("PAUSE");
+	return 0;
+};
