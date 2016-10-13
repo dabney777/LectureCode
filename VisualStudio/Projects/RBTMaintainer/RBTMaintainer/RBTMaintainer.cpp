@@ -86,7 +86,13 @@ private:
 
 	}
 	string outPutColor(RBTNode *node) {
-		return node->color ? "BLACK" : "RED";
+		if (node != NULL)
+		{
+			return node->color ? "BLACK" : "RED";
+		}
+		else {
+			return "I am NULL";
+		}
 	}
 	RBTNode *creatNewNode(int data){
 		RBTNode *node = new RBTNode();
@@ -126,7 +132,7 @@ private:
 					
 				}
 			}else{
-				if (insertP == insertP->parent->left) {//IV:insert to BBR's left
+				if (node->key < insertP->key) {//IV:insert to BBR's left
 					insertP->left = node;
 					node->parent = insertP;
 					rightRotate(node);
@@ -181,7 +187,9 @@ public:
 		if (node == NULL) { cout << "I am an empty tree" << endl; }
 		else {
 			if (node->left != NIL)	print(node->left);
-			cout << node->key << outPutColor(node) << endl;
+			
+			cout << node->key << outPutColor(node);
+				if (node->parent != NULL) cout << node ->parent->key << endl;else cout<<endl;
 			if (node->right != NIL)	print(node->right);
 		}
 	}
