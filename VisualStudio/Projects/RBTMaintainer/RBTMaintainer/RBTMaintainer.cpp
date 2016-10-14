@@ -174,6 +174,154 @@ private:
 			}
 		}
 	}
+	RBTNode* search(int key,RBTNode *tree) {
+		if (key > tree->key) {//all comparision like this is > and <=
+			if (tree->right == NIL) {
+				return tree->key == key ? tree : NULL;
+			}
+			else { return search(key, tree->right); }
+		}
+		else
+		{
+			if (tree->key == key)return tree;	
+			if (tree->left == NIL) {
+				return tree->key == key?tree:NULL;
+			}
+			else {
+				return search(key, tree->left);
+			}
+		}
+
+
+	}
+	RBTNode *findMaxNode(RBTNode *node){
+		if (node->right == NIL) { return node; }
+		else {
+			return findMaxNode(node->right);
+		}
+	}
+	RBTNode *findMinimumNode(RBTNode *node){
+		if (node->left == NIL) { return node; }
+		else {
+			return findMinimumNode(node->left);
+		}
+	}
+	RBTNode *findPrecursor(RBTNode *node) {
+		if (node->left == NIL) { return NULL; }
+		return findMaxNode(node->left);
+	}
+	RBTNode *findSucceed(RBTNode *node){
+		if (node->right == NIL) { return NULL; }
+		return findMinimumNode(node->right);
+	}
+	RBTNode *findBrother(RBTNode *node) {
+		if (node->parent == NULL) return NULL; else {
+			if (node->parent->left == node) {
+				return node->parent->right;
+			}
+			else {//node->parent->right == node
+				return node->parent->left;
+			}
+		}
+	}
+	void deleteDoubleNILBLACKNode(RBTNode *node) {
+		RBTNode *pa = node->parent, *br = findBrother(node);
+		if (br == NULL) return;
+		if (br->color == RED) {
+			br->color = pa->color;
+			pa->color = BLACK;
+			if (node == pa->left) {
+				pa->left = NIL;
+				leftRotate(br);
+			}
+			else {//node == pa->right
+				pa->right = NIL;
+				rightRotate(br);
+			}
+			
+		}
+		else {//br->color == BLACK
+			br->color = RED;
+			if (pa->color == RED) { pa->color = BLACK; return; }
+			else {
+				deleteDoubleNILBLACKNode(pa);
+			}
+
+		}
+
+
+	}
+	void delete1SonNode(RBTNode *node) {
+		RBTNode *child=NULL;
+		if (node->left != NIL) {
+			child = node->left;
+		}
+		if (node->right != NIL) {
+			child = node->right;
+		}
+		if (child == NULL) {
+		
+		}
+		else {
+			if (child->color == RED) {
+				child->color = BLACK;
+				child->parent = node->parent;
+				if (node->parent->left == node) {
+					node->parent->left = child;
+				}
+				else {//node->parent->right == node
+					node->parent->right = child;
+				}
+				free(node);
+			}
+			else {//child->color == BLACK
+				cout << "I have a wrong" << endl;
+			}
+		}
+		}
+	void delete0SonNode(RBTNode *node) {
+		if (node->color == RED) {
+			//do nothing
+		}
+		else {//node->color == BLACK
+			deleteDoubleNILBLACKNode(node);
+		}
+		if (node->parent->left == node) {
+			node->parent->left = NIL;
+		}
+		else {
+			node->parent->right = NIL;
+		}
+
+		}
+	void deleteNode(int data) {
+		RBTNode *node = search(data, root), *dead;
+		if (node == NULL) {
+			cout << "There is no " << data << " node in this tree" << endl;
+			return;
+		}
+
+		if (node->left != NIL) { 
+			dead = findPrecursor(node); 
+			node->key = dead->key;
+			if (dead->left != NIL) { delete1SonNode(dead); }
+			else { delete0SonNode(dead); }
+		}
+		else {//node->left == NIL
+			if (node->right != NIL) {
+				dead = findSucceed(node);
+				node->key = dead->key;
+				if (dead->right != NIL) { delete1SonNode(dead); }
+				else { delete0SonNode(dead); }
+			}
+			else {//node->right ==NIL
+				if (node == root) { root = NULL; return ; }
+				delete0SonNode(node);
+			}
+		}
+
+
+	}
 public:
 	void insert(int x) {
 		NIL->color = BLACK;
@@ -183,6 +331,11 @@ public:
 			insertRBT(root, newnode);
 		}
 	}
+	void deleteRBTNode(int x) {
+
+		deleteNode(x);
+	}
+
 	void print(RBTNode *node) {
 		if (node == NULL) { cout << "I am an empty tree" << endl; }
 		else {
@@ -207,7 +360,12 @@ int main() {
 		rbt.insert(c);
 			
 	}
-	
+	rbt.realPrint();
+	cout << "--------------------------" << endl;
+	rbt.deleteRBTNode(8);
+	rbt.deleteRBTNode(7);
+	rbt.deleteRBTNode(63);
+	rbt.deleteRBTNode(7111);
 	rbt.realPrint();
 	system("PAUSE");
 	return 0;
