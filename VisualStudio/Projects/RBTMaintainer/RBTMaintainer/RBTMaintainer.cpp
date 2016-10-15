@@ -28,6 +28,7 @@ private:
 			return NULL;
 		}
 		RBTNode *uncle() {
+			if (parent == NULL)return NULL;
 			if (parent->right == this) return parent->left;
 			return parent->right;
 		}
@@ -175,17 +176,17 @@ private:
 		}
 	}
 	RBTNode* search(int key,RBTNode *tree) {
+		if (tree->key == key) return tree;
 		if (key > tree->key) {//all comparision like this is > and <=
 			if (tree->right == NIL) {
-				return tree->key == key ? tree : NULL;
+				return  NULL;
 			}
 			else { return search(key, tree->right); }
 		}
 		else
 		{
-			if (tree->key == key)return tree;	
 			if (tree->left == NIL) {
-				return tree->key == key?tree:NULL;
+				return NULL;
 			}
 			else {
 				return search(key, tree->left);
@@ -227,12 +228,12 @@ private:
 	void deleteDoubleNILBLACKNode(RBTNode *node) {
 		RBTNode *pa = node->parent, *br = findBrother(node);
 		if (br == NULL) return;
-		if (br->color == RED) {
+		if (br->color == RED&&br!=NIL) {
 			br->color = pa->color;
 			pa->color = BLACK;
 			if (node == pa->left) {
 				pa->left = NIL;
-				leftRotate(br);
+				leftRotate(br);//与node所在位置相同
 			}
 			else {//node == pa->right
 				pa->right = NIL;
@@ -286,10 +287,11 @@ private:
 		else {//node->color == BLACK
 			deleteDoubleNILBLACKNode(node);
 		}
+		
 		if (node->parent->left == node) {
 			node->parent->left = NIL;
 		}
-		else {
+		if (node->parent->right == node){
 			node->parent->right = NIL;
 		}
 
@@ -297,7 +299,7 @@ private:
 	void deleteNode(int data) {
 		RBTNode *node = search(data, root), *dead;
 		if (node == NULL) {
-			cout << "There is no " << data << " node in this tree" << endl;
+			cout << "Iam running!" << endl;
 			return;
 		}
 
@@ -323,6 +325,9 @@ private:
 
 	}
 public:
+	RBTNode *RBTSearch(int key) {
+		return search(key, root);
+	}
 	void insert(int x) {
 		NIL->color = BLACK;
 		RBTNode * newnode = creatNewNode(x);
@@ -336,37 +341,49 @@ public:
 		deleteNode(x);
 	}
 
-	void print(RBTNode *node) {
+	void print(RBTNode *node,ofstream &out) {
 		if (node == NULL) { cout << "I am an empty tree" << endl; }
 		else {
-			if (node->left != NIL)	print(node->left);
 			
-			cout << node->key << outPutColor(node);
-				if (node->parent != NULL) cout << node ->parent->key << endl;else cout<<endl;
-			if (node->right != NIL)	print(node->right);
+			if (node->left != NIL)	print(node->left,out);
+			
+			out << node->key << "\t" << outPutColor(node) << "\t";
+			if (node->parent != NULL) out << node->parent->key << endl; else out << "\tNULL" << endl;
+
+			if (node->right != NIL)	print(node->right,out);
 		}
 	}
-	void realPrint() { print(root); }
+	void RBTPrint(ofstream &out) {
+		
+		print(root,out); }
 };
 
+	
 
 int main() {
-	ifstream in("C:\\Users\\Dabney\\Desktop\\DATA.txt");
+	ifstream in(".\\DATA.txt");
+	ofstream out;
+	out.open(".\\DATAOUT.txt");
 	int n,c;
 	in >> n;
 	RBT rbt;
 	for (int i = 0; i < n; i++) {
 		in >> c;
+		
 		rbt.insert(c);
-			
 	}
-	rbt.realPrint();
-	cout << "--------------------------" << endl;
-	rbt.deleteRBTNode(8);
-	rbt.deleteRBTNode(7);
-	rbt.deleteRBTNode(63);
-	rbt.deleteRBTNode(7111);
-	rbt.realPrint();
+	rbt.RBTPrint(out);
+	cout << "--------------------------------------------------" << endl;
+	cout << "IF you want TEST delete function" ;
+	in.close();
+	system("PAUSE");
+	for (int i = 0; i < 800; i++) {
+		for(int j =0;j<10;j++)//用于删除重复值
+		rbt.deleteRBTNode(i);
+	}
+	out.close();
+	out.open(".\\DATAafterDelete.txt");
+	rbt.RBTPrint(out);
 	system("PAUSE");
 	return 0;
 };

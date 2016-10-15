@@ -1,6 +1,8 @@
 package cc.openhome;
 
 import javax.swing.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class JNotePad extends JFrame{
     private JMenuBar menuBar;
@@ -16,7 +18,7 @@ public class JNotePad extends JFrame{
     private JMenuItem menuPaste;
 
     private JMenu aboutMenu;
-
+    private JMenuItem menuAbout;
 
     public JNotePad(){
         initComponents();
@@ -26,6 +28,20 @@ public class JNotePad extends JFrame{
     private void initComponents(){
         setTitle("newTextDocumentary");
         setSize(400,300);
+        initMenuBar();
+
+    }
+    private void initMenuBar(){
+        menuBar=new JMenuBar();
+        filemenu = new JMenu("file");
+        menuOpen = new JMenuItem("Open");
+        menuSave = new JMenuItem("Save");
+        menuBar.add(filemenu);
+        filemenu.add(menuOpen);
+        filemenu.add(menuSave);
+        menuOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+        setJMenuBar(menuBar);
+
     }
 
     private void initEventListeners(){
