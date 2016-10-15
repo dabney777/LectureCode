@@ -1,0 +1,4 @@
+﻿  RandomNumCreater.cpp
+c:\users\dabney\documents\workplace\visualstudio\projects\randomnumcreater\randomnumcreater\randomnumcreater.cpp(13): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  RandomNumCreater.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\RandomNumCreater\Debug\RandomNumCreater.exe
+  RandomNumCreater.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\RandomNumCreater\Debug\RandomNumCreater.pdb (Full PDB)
