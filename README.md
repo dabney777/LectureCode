@@ -1,5 +1,5 @@
 # LectureCode
-####JAVA in IDEAProject & C++ in VisualStudio
+>JAVA in IDEAProject & C++ in VisualStudio
 ##My algorithm home work
 ###1.Closet Point Pair
 ###2.Convex Hull
