@@ -9,5 +9,6 @@
 ###5.Red Black Tree
     A program to mantain a tree that meet the RBT's conditions.
 ###6.Dynamic Hash Table
+    A Hash Table using pointer to a Bucket pointer array.When insertion happend and table need split,double expand table but new extension only have points to old part.It avoid high cost on contributiing a hash table. This new insertion will be inserted in new extension and the corresponding bucket's data will be taken out and reinsert again.
 
 

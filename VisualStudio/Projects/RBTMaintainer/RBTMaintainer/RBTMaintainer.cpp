@@ -176,6 +176,7 @@ private:
 		}
 	}
 	RBTNode* search(int key,RBTNode *tree) {
+		if (tree == NULL) return NULL;
 		if (tree->key == key) return tree;
 		if (key > tree->key) {//all comparision like this is > and <=
 			if (tree->right == NIL) {
@@ -346,9 +347,11 @@ public:
 		else {
 			
 			if (node->left != NIL)	print(node->left,out);
-			
+
+			RBTNode *i=node->parent;
+			while (i != NULL) { out << "|\t"; i = i->parent; }
 			out << node->key << "\t" << outPutColor(node) << "\t";
-			if (node->parent != NULL) out << node->parent->key << endl; else out << "\tNULL" << endl;
+			if (node->parent != NULL) out<<endl; else out << "\t\t\t\tI am ROOT" << endl;
 
 			if (node->right != NIL)	print(node->right,out);
 		}
@@ -377,13 +380,18 @@ int main() {
 	cout << "IF you want TEST delete function" ;
 	in.close();
 	system("PAUSE");
-	for (int i = 0; i < 800; i++) {
-		for(int j =0;j<10;j++)//用于删除重复值
+	/*for (int i = 0; i < 800; i++) {
+		for(int j =0;j<35;j++)//用于删除重复值
 		rbt.deleteRBTNode(i);
-	}
+	}*/
+	rbt.deleteRBTNode(7);
+	rbt.deleteRBTNode(17);
+	rbt.deleteRBTNode(1);
 	out.close();
 	out.open(".\\DATAafterDelete.txt");
+	out << "\n\n======================================\n删除7,17,1之后：\n";
 	rbt.RBTPrint(out);
+	
 	system("PAUSE");
 	return 0;
 };
