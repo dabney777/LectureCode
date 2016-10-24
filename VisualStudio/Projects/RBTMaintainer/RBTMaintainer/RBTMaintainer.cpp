@@ -32,8 +32,15 @@ private:
 			if (parent->right == this) return parent->left;
 			return parent->right;
 		}
+		
 	};
 	RBTNode *root=NULL, *NIL=new RBTNode();
+	void colorChange(RBTNode *a, RBTNode*b) {
+		bool tmp = a->color;
+		a->color = b->color;
+		b->color = tmp;
+
+	}
 	void rightRotate(RBTNode *node) {
 		RBTNode *gp = node->grandparent();
 		RBTNode *pa = node->parent;
@@ -49,7 +56,7 @@ private:
 		if (node->right != NIL) { node->right->parent = pa; }
 		node->right = pa;
 	}
-
+	
 	void leftRotate(RBTNode *node) {
 		RBTNode *gp = node->grandparent();
 		RBTNode *pa = node->parent;
@@ -68,22 +75,90 @@ private:
 		if (node->left != NIL) { node->left->parent = pa; }
 		node->left = pa;
 	}
+	RBTNode *brother(RBTNode *node) {
+		RBTNode *b;
+		if (node->parent == NULL) return NULL;
+		if (node->parent->left == node) b = node->parent->right; else b = node->parent->left;
+		return b;
+	}
+	void doubleRED(RBTNode* node) {
+		RBTNode *parentNode = node->parent;
+		if (parentNode != RED)return;
+		RBTNode *bro = brother(parentNode);
+		if (bro->color == RED) {
+			
+			bro->color = BLACK;
+			parentNode->color = BLACK;
+			parentNode->parent->color = RED;
+			doubleRED(parentNode->parent);
+			return;
+		}
+		//if (node->parent->color == RED) { doubleRED(node->parent); return; }
+		colorChange(parentNode, parentNode->parent);
+		if (parentNode == parentNode->parent->left) {
+			rightRotate(parentNode);	
+		}
+		else { leftRotate(parentNode); }
+
+		if (parentNode == root) {
+			parentNode->color = BLACK;
+			flipcolor(parentNode);
+			return;
+		}
+	
+		if(parentNode->parent->color!=BLACK) doubleRED(parentNode);
+
+
+	}
 
 	void flipcolor(RBTNode *node) {
-		if (node==NULL)
+		RBTNode *nodeGrandpa = node->parent->parent;
+		if (nodeGrandpa==NULL)
 		{
 			return;
 
 		}
-		if (node->left != NIL&&node->right != NIL&&node->left->color == RED&&node->right->color == RED)
+		if (nodeGrandpa->left->color == RED&&nodeGrandpa->right->color == RED)
 		{
-			node->left->color = BLACK;
-			node->right->color = BLACK;
-			if (node != root) {
-				node->color = RED;
-				flipcolor(node->parent);
+			nodeGrandpa->left->color = BLACK;
+			nodeGrandpa->right->color = BLACK;
+			if (nodeGrandpa != root) {
+				nodeGrandpa->color = RED;
+				
+				if (nodeGrandpa->parent->color == RED) { 
+					flipcolor(nodeGrandpa);
+					
+					//node->parent->color = BLACK;
+					//if (node == node->parent->left) node->parent->right->color = RED; else node->parent->left->color = RED;
+				}
 			}
+			return;
 		}
+		if (nodeGrandpa->left->color != nodeGrandpa->right->color) {
+			if (node->key > nodeGrandpa->key) {//node和他的parent在右侧
+				if (node->key > node->parent->key) {
+					node->parent->color = BLACK;
+					nodeGrandpa->color = RED;
+					leftRotate(node->parent);
+				}
+				else {
+					rightRotate(node);
+					flipcolor(node->right);
+				}
+			}
+			else {//在左侧
+				if (node->key > node->parent->key) { leftRotate(node); 
+				flipcolor(node->left);
+				}
+				else {
+					node->parent->color = BLACK;
+					nodeGrandpa->color = RED;
+					rightRotate(node->parent);
+				}
+			}
+		
+		}
+
 
 	}
 	string outPutColor(RBTNode *node) {
@@ -112,11 +187,15 @@ private:
 		}
 	}
 	void insertToREDPoint(RBTNode *insertP, RBTNode *node) {
-		flipcolor(insertP->parent);
-		if (insertP->color == BLACK) { insertToBLACKPoint(insertP, node); }
-		else {
+		if (node->key > insertP->key) insertP->right = node; else insertP->left = node;
+		node->parent = insertP;
+		flipcolor(node);//insertP's parent must be BLACK unless it is root
+			
+			/*
+			if (insertP->color == BLACK) { insertToBLACKPoint(insertP, node); }
+		else {//Black Nil Uncle
 			if(insertP==insertP->parent->left){
-				if (node->key > insertP->key) {//II:insert to BRB's right
+				if (node->key > insertP->key) {//II:insert to RBN's right
 					node->parent = insertP;
 					insertP->right = node;
 					leftRotate(node);
@@ -124,7 +203,7 @@ private:
 					insertP->left = insertP->right = NIL;
 					insertToREDPoint(node, insertP);
 				}
-				else {//I:insert to BRB's left
+				else {//I:insert to RBN's left
 					node->parent = insertP;
 					insertP->left = node;
 					insertP->color = BLACK;
@@ -133,26 +212,25 @@ private:
 					
 				}
 			}else{
-				if (node->key < insertP->key) {//IV:insert to BBR's left
+				if (node->key > insertP->key) {//III:insert to BBR's right
+					insertP->right = node;
+					node->parent = insertP;
+					insertP->color = BLACK;
+					node->grandparent()->color = RED;
+					leftRotate(insertP);
+				}
+				else {
 					insertP->left = node;
 					node->parent = insertP;
 					rightRotate(node);
 					node->right = NIL;
 					insertP->left = insertP->right = NIL;
 					insertToREDPoint(node, insertP);
-				}
-				else {
-					insertP->right = node;
-					node->parent = insertP;
-					insertP->color = BLACK;
-					node->grandparent()->color = RED;
-					leftRotate(insertP);
-
-					//III:insert to BBR's right
+					//IV:insert to BBR's left
 				}
 			}
 			
-		}
+		}*/
 	}
 	void insertRBT(RBTNode *insertP, RBTNode *node) { 
 		
@@ -166,6 +244,7 @@ private:
 			}
 		}
 		else {
+			
 			if (insertP->left != NIL){insertRBT(insertP->left,node);	}
 			else {
 				if (insertP->color == BLACK) { insertToBLACKPoint(insertP, node); }
@@ -346,14 +425,18 @@ public:
 		if (node == NULL) { cout << "I am an empty tree" << endl; }
 		else {
 			
-			if (node->left != NIL)	print(node->left,out);
+			
+			if (node->right != NIL)	print(node->right, out);
 
-			RBTNode *i=node->parent;
+			RBTNode *i = node->parent;
 			while (i != NULL) { out << "|\t"; i = i->parent; }
 			out << node->key << "\t" << outPutColor(node) << "\t";
-			if (node->parent != NULL) out<<endl; else out << "\t\t\t\tI am ROOT" << endl;
+			if (node->parent != NULL) out << endl; else out << "\t\t\t\tI am ROOT" << endl;
 
-			if (node->right != NIL)	print(node->right,out);
+
+			
+			if (node->left != NIL)	print(node->left, out);
+			
 		}
 	}
 	void RBTPrint(ofstream &out) {

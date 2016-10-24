@@ -2,41 +2,41 @@
 
 ======================================
 É¾³ý7,17,1Ö®ºó£º
-|	|	|	|	2	BLACK	
-|	|	|	|	|	3	RED	
-|	|	|	4	BLACK	
-|	|	|	|	5	BLACK	
-|	|	6	BLACK	
-|	|	|	|	|	8	BLACK	
-|	|	|	|	9	BLACK	
-|	|	|	|	|	10	BLACK	
-|	|	|	11	BLACK	
-|	12	BLACK	
-|	|	|	|	18	RED	
-|	|	|	21	BLACK	
-|	|	|	|	22	RED	
-|	|	23	BLACK	
-|	|	|	24	BLACK	
-26	BLACK					I am ROOT
-|	|	|	|	35	RED	
-|	|	|	37	BLACK	
-|	|	|	|	43	RED	
-|	|	44	BLACK	
-|	|	|	45	BLACK	
-|	47	BLACK	
-|	|	|	|	55	RED	
-|	|	|	56	BLACK	
-|	|	|	|	57	RED	
-|	|	64	BLACK	
-|	|	|	|	|	|	71	RED	
-|	|	|	|	|	76	BLACK	
-|	|	|	|	79	BLACK	
-|	|	|	|	|	|	82	RED	
+|	|	|	|	|	425	RED	
+|	|	|	|	424	BLACK	
+|	|	|	|	|	417	RED	
+|	|	|	400	BLACK	
+|	|	|	|	|	123	RED	
+|	|	|	|	112	BLACK	
+|	|	111	RED	
 |	|	|	|	|	100	BLACK	
-|	|	|	111	RED	
-|	|	|	|	|	112	BLACK	
-|	|	|	|	|	|	123	RED	
-|	|	|	|	400	BLACK	
-|	|	|	|	|	|	417	RED	
-|	|	|	|	|	424	BLACK	
-|	|	|	|	|	|	425	RED	
+|	|	|	|	|	|	82	RED	
+|	|	|	|	79	RED	
+|	|	|	|	|	76	BLACK	
+|	|	|	|	|	|	71	RED	
+|	|	|	64	BLACK	
+|	|	|	|	|	57	RED	
+|	|	|	|	56	BLACK	
+|	|	|	|	|	55	RED	
+|	47	RED	
+|	|	|	|	45	BLACK	
+|	|	|	44	RED	
+|	|	|	|	|	43	RED	
+|	|	|	|	37	BLACK	
+|	|	|	|	|	35	RED	
+|	|	26	BLACK	
+|	|	|	|	24	BLACK	
+|	|	|	23	RED	
+|	|	|	|	|	22	RED	
+|	|	|	|	21	BLACK	
+|	|	|	|	|	18	RED	
+12	BLACK					I am ROOT
+|	|	11	BLACK	
+|	|	|	10	RED	
+|	9	BLACK	
+|	|	|	8	BLACK	
+|	|	6	RED	
+|	|	|	|	5	BLACK	
+|	|	|	4	RED	
+|	|	|	|	|	3	RED	
+|	|	|	|	2	BLACK	
