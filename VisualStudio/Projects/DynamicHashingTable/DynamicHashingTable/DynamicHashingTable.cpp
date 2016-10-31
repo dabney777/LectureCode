@@ -1,5 +1,5 @@
 // DynamicHashingTable.cpp : Defines the entry point for the console application.
-//
+//ACM paper:Dynamic-Sized Nonblocking Hash Tables   Author:Yujie Liu
 
 #include "stdafx.h"
 #include <iostream>

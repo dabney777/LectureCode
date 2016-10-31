@@ -1,0 +1,4 @@
+﻿  OptimalBinarySearchTree.cpp
+c:\users\dabney\documents\workplace\visualstudio\projects\optimalbinarysearchtree\optimalbinarysearchtree\optimalbinarysearchtree.cpp(33): warning C4101: 'root': unreferenced local variable
+  OptimalBinarySearchTree.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\OptimalBinarySearchTree\Debug\OptimalBinarySearchTree.exe
+  OptimalBinarySearchTree.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\OptimalBinarySearchTree\Debug\OptimalBinarySearchTree.pdb (Full PDB)
