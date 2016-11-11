@@ -13,5 +13,3 @@ A Hash Table using pointer to a Bucket pointer array.When insertion happend and 
 ###7.Optimal Binary Search Tree
 
 ###8.Longest Common Subsequents
-
-to be next to be nextto be next to be nextto be next to be nextto be next to be nextto be next to be nextto be next to be nextto be next to be nextto be next to be nextto be next to be nextto be next to be next

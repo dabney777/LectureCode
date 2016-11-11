@@ -11,10 +11,12 @@ class Bucket {
 private:
 	int data[8];
 	int next = 0;
+	
 public :
 	int linkCount = 1;
 	Bucket() {};
 	bool isEmpty() { return next == 0; }
+	int quantity() { return next; }
 	bool add(int x) {
 		if (next >= 8) return false;
 		for (int i = 0; i < next; i++)if (data[i] == x)return true;
@@ -32,7 +34,7 @@ public :
 			return true;
 		}
 	}
-	int getByIndex(int idx) {
+	int readByIndex(int idx) {
 		if (idx < next) {
 			return data[idx];
 		}
@@ -52,6 +54,7 @@ class DynamicHashTable {
 private:
 	int DEFAULT_SIZE = 4;
 	int current = 4;
+	int history = 4;
 	Bucket **bucket;
 	bool expand() {
 		Bucket **old = bucket;
@@ -61,15 +64,30 @@ private:
 			bucket[i + current] = old[i];
 			bucket[i]->linkCount += 1;
 		}
+		history = current;
 		current *= 2;
 		return true;
 	}
 
 	bool shrink() {
 		if (current == DEFAULT_SIZE)return false;
-		for (int i = current / 2; i < current; i++) {
-			if (bucket[i] != bucket[i + current])return false;
+		for (int i =0 ; i < current/2+1; i++) {
+				if ((bucket[i] != bucket[i + current / 2+1])
+					&&(bucket[i]->quantity() + bucket[i + current / 2+1]->quantity() > 8)) return false;
 		}
+		for (int i = 0; i < current/2; i++) {
+			if (bucket[i] != bucket[i + current / 2+1]) {
+				for (int j = 0; j < bucket[i + current / 2+1]->quantity(); j++) {
+					bucket[i]->add(bucket[i + current / 2 + 1]->readByIndex(j));
+				}
+					
+				
+			}else {
+				bucket[i]->linkCount -= 1;
+			}
+
+		}
+		history = current;
 		current /= 2;
 		return true;
 	}
@@ -88,7 +106,12 @@ public:
 		 int tmp =hash(x);
 		 return (bucket[tmp]->removeByValue(x));
 	}
-
+	void del(int x) {
+		int tmp = hash(x);
+		Bucket *b = bucket[tmp];
+		bucket[tmp]->removeByValue(x);
+		shrink();
+	}
 	void insert(int x) {
 		int tmp = hash(x);
 		Bucket *b = bucket[tmp];
@@ -104,7 +127,7 @@ public:
 			insert(x);
 			int t[8], i = 0;
 			while (b->isEmpty()) {
-				t[i++] = b->getByIndex(0);
+				t[i++] = b->readByIndex(0);
 				b->removeByIndex(0);
 			}
 			while (i > 0)
@@ -116,22 +139,42 @@ public:
 
 	int main()
 	{
+		DynamicHashTable table;
 		fstream out(".//DATA.txt");
 		int n = 0, d = 0;
 		out >> n;
-		DynamicHashTable table;
+		
 		for (int i = 0; i < n; i++) {
 			out >> d;
 			table.insert(d);
 		}
-		while (true) { cin >> n; 
+		out.close();
+		fstream out1(".//DATA.txt");
+		out1 >> n;
+
+		for (int i = 0; i < n; i++) {
+			out1 >> d;
+			if (table.findValue(d)) {
+				cout << d << " is existent and I have deleted it." << endl;
+				table.del(d);
+			}
+			else {
+				cout << d << " is not existent." << endl;
+			}
+		}
+
+		/*while (true) {
+			
+			cin >> n; 
 		if (table.findValue(n)) {
 			cout << n << " is existent and I have deleted it." << endl;
+			table.del(n);
+
 		}
 		else {
 			cout << n << " is not existent." << endl;
 		}
-		}
-		//system("PAUSE");
+		}*/
+		system("PAUSE");
 		return 0;
 	}
