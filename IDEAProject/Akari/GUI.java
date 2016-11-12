@@ -72,50 +72,6 @@ public class GUI extends JFrame {
         }
         this.add(new Panel());
     }
-    public void updateDisplay(Frames f,char[][] _board){
-        Font buttonFont = new Font("华文行楷",Font.BOLD,25);
-        for(int i =0;i<f.rowMax;i++){
-            for(int j = 0 ; j<f.columnMax;j++){
-                jbutton[i][j]= new JButton();
-
-                jbutton[i][j].setSize(50,50);
-                jbutton[i][j].setLocation(1+50*j,1+50*i);
-                jbutton[i][j].setFont(buttonFont);
-                jbutton[i][j].setForeground(Color.WHITE);
-
-
-                switch (_board[i][j]){
-                    case '#': jbutton[i][j].setBackground(Color.DARK_GRAY);break;
-                    case 'l': jbutton[i][j].setBackground(Color.CYAN);break;
-                    case 'w': jbutton[i][j].setBackground(Color.WHITE);break;
-                    case 'b': jbutton[i][j].setBackground(Color.BLACK);break;
-                    case '*': jbutton[i][j].setBackground(Color.LIGHT_GRAY);
-                        jbutton[i][j].setText("*");
-                        break;
-                    case '0': jbutton[i][j].setBackground(Color.BLACK);
-                        jbutton[i][j].setText("0");
-                        break;
-                    case '1': jbutton[i][j].setBackground(Color.BLACK);
-                        jbutton[i][j].setText("1");
-                        break;
-                    case '2': jbutton[i][j].setBackground(Color.BLACK);
-                        jbutton[i][j].setText("2");
-                        break;
-                    case '3': jbutton[i][j].setBackground(Color.BLACK);
-                        jbutton[i][j].setText("3");
-                        break;
-                    case '4': jbutton[i][j].setBackground(Color.BLACK);
-                        jbutton[i][j].setText("4");
-                        break;
-                    case 'x': jbutton[i][j].setBackground(Color.YELLOW);break;
-                    default:
-                }
-                this.add(jbutton[i][j]);
-                jbutton[i][j].setVisible(true);
-            }
-
-        }
-    }
     public GUI(Frames f,char[][] _board){
         super();
         Font buttonFont = new Font("华文行楷",Font.BOLD,25);
@@ -133,7 +89,6 @@ public class GUI extends JFrame {
 
 
                 switch (_board[i][j]){
-                    case '#': jbutton[i][j].setBackground(Color.DARK_GRAY);break;
                     case 'l': jbutton[i][j].setBackground(Color.CYAN);break;
                     case 'w': jbutton[i][j].setBackground(Color.WHITE);break;
                     case 'b': jbutton[i][j].setBackground(Color.BLACK);break;
