@@ -1,0 +1,5 @@
+﻿  ShotestPathFasterAlgorithm.cpp
+c:\users\dabney\documents\workplace\visualstudio\projects\shotestpathfasteralgorithm\shotestpathfasteralgorithm\shotestpathfasteralgorithm.cpp(24): warning C4005: 'INT_MAX': macro redefinition
+  d:\softwareincomputer\visualstudio\vc\include\limits.h(35): note: see previous definition of 'INT_MAX'
+  ShotestPathFasterAlgorithm.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\ShotestPathFasterAlgorithm\Debug\ShotestPathFasterAlgorithm.exe
+  ShotestPathFasterAlgorithm.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\ShotestPathFasterAlgorithm\Debug\ShotestPathFasterAlgorithm.pdb (Full PDB)

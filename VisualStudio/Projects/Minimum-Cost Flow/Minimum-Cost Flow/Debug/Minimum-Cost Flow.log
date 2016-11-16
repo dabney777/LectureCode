@@ -1,0 +1,5 @@
+﻿  Minimum-Cost Flow.cpp
+c:\users\dabney\documents\workplace\visualstudio\projects\minimum-cost flow\minimum-cost flow\minimum-cost flow.cpp(22): warning C4005: 'INT_MAX': macro redefinition
+  d:\softwareincomputer\visualstudio\vc\include\limits.h(35): note: see previous definition of 'INT_MAX'
+  Minimum-Cost Flow.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\Minimum-Cost Flow\Debug\Minimum-Cost Flow.exe
+  Minimum-Cost Flow.vcxproj -> C:\Users\Dabney\Documents\WorkPlace\VisualStudio\Projects\Minimum-Cost Flow\Debug\Minimum-Cost Flow.pdb (Full PDB)
