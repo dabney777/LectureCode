@@ -22,6 +22,7 @@ A Hash Table using pointer to a Bucket pointer array.When insertion happend and 
 ###8.Longest Common Subsequents
 
 ###9.Akari puzzle
+
 这个比较难，想了一种关灯的搜索方法。主要规则是：
 得到满足所有黑色有数字方块的一个带有未照亮的块的可能解集。
 解集大小为 4~（3号块数量+1号块数量）+6~（2号块数量）—灯互相照射到的解的集合。集合中的灯为黄色。
