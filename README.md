@@ -1,27 +1,28 @@
 # LectureCode
 >JAVA in IDEAProject & C++ in VisualStudio
 
-##My algorithm home work
+## My algorithm home work
 
-###1.Closet Point Pair
+### 1.Closet Point Pair
 
-###2.Convex Hull
+### 2.Convex Hull
 
-###3.Cut-Vertex
+### 3.Cut-Vertex
 
-###4.is Bipartiteness
+### 4.is Bipartiteness
 
-###5.Red Black Tree
+### 5.Red Black Tree
 A program to mantain a tree that meet the RBT's conditions.
 
-###6.Dynamic Hash Table
+### 6.Dynamic Hash Table
+
 A Hash Table using pointer to a Bucket pointer array.When insertion happend and table need split,double expand table but new extension only have points to old part.It avoid high cost on contributiing a hash table. This new insertion will be inserted in new extension and the corresponding bucket's data will be taken out and reinsert again. 
 
-###7.Optimal Binary Search Tree
+### 7.Optimal Binary Search Tree
 
-###8.Longest Common Subsequents
+### 8.Longest Common Subsequents
 
-###9.Akari puzzle
+### 9.Akari puzzle
 
 这个比较难，想了一种关灯的搜索方法。主要规则是：
 得到满足所有黑色有数字方块的一个带有未照亮的块的可能解集。
