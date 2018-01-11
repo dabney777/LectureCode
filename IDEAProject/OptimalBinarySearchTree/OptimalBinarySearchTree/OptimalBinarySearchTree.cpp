@@ -8,7 +8,7 @@
 #include <String>
 #include <vector>
 
-using namespace std;
+using namespace std{
 
 class OptimaBST {
 private:
@@ -161,3 +161,4 @@ int main()
     return 0;
 }
 
+}
